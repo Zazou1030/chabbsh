@@ -1,0 +1,244 @@
+/* style.css */
+
+/* Basic reset */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #0b0f14;
+  color: #e8eef6;
+}
+
+/* Mobile tap nicety */
+button, input { -webkit-tap-highlight-color: transparent; }
+
+/* Header / Footer */
+.header, .footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.header h1 {
+  margin: 0 0 6px 0;
+  /* Responsive typography */
+  font-size: clamp(22px, 5vw, 34px);
+  letter-spacing: 0.5px;
+}
+
+.header p {
+  margin: 0;
+  opacity: 0.85;
+  font-size: clamp(14px, 3.5vw, 16px);
+}
+
+.footer {
+  opacity: 0.7;
+  padding-bottom: 28px;
+}
+
+/* Grid */
+.grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px 28px 16px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+
+/* Slightly tighter on small phones */
+@media (max-width: 420px) {
+  .grid {
+    padding-left: 12px;
+    padding-right: 12px;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  }
+}
+
+/* Card wrapper includes image + input */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 3D flip area */
+.card-flip {
+  /* Use aspect-ratio so the card scales well on mobile */
+  width: 100%;
+  aspect-ratio: 4 / 5;    /* replaces fixed height: 300px */
+  perspective: 1000px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+  outline: none;
+}
+
+/* When flipped */
+.card.is-flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Front / Back faces */
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FRONT: image */
+.card-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.35));
+}
+
+/* BACK: name */
+.card-back {
+  transform: rotateY(180deg);
+  background: #111a24;
+  padding: 16px;
+  text-align: center;
+}
+
+.card-back .name {
+  font-size: clamp(18px, 4.5vw, 26px);
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.card-back .hint {
+  margin-top: 8px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+/* Input row */
+.answer-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* Mobile: stack input + button for thumb comfort */
+@media (max-width: 420px) {
+  .answer-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.answer-row input {
+  flex: 1;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(232, 238, 246, 0.18);
+  background: rgba(255,255,255,0.06);
+  color: #e8eef6;
+  padding: 0 10px;
+  outline: none;
+
+  /* Prevent iOS zoom, improve legibility */
+  font-size: 16px;
+}
+
+.answer-row input::placeholder {
+  color: rgba(232, 238, 246, 0.55);
+}
+
+.answer-row button {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(232, 238, 246, 0.18);
+  background: rgba(255,255,255,0.10);
+  color: #e8eef6;
+  cursor: pointer;
+
+  /* Prevent iOS zoom */
+  font-size: 16px;
+
+  /* Better touch behavior */
+  touch-action: manipulation;
+}
+
+/* Mobile: bigger tap targets */
+@media (max-width: 420px) {
+  .answer-row input,
+  .answer-row button {
+    height: 44px;      /* more finger-friendly */
+  }
+  .answer-row button {
+    width: 100%;
+  }
+}
+
+.answer-row button:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+.answer-row input:focus {
+  border-color: rgba(232, 238, 246, 0.35);
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+}
+
+.answer-row input:disabled,
+.answer-row button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Feedback */
+.msg {
+  font-size: 12px;
+  min-height: 16px;
+  opacity: 0.85;
+}
+
+.msg.ok { color: #7dffb2; }
+.msg.no { color: #ff8d8d; }
+
+/* Wrong-answer shake */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+.card.shake .card-inner {
+  animation: shake 280ms ease-in-out;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .card-inner { transition: none; }
+  .card.shake .card-inner { animation: none; }
+}
